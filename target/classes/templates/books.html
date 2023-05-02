@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+<link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
+
+<head>
+    <meta charset="UTF-8">
+    <title>List</title>
+</head>
+<body style="background: #9BA17B">
+<div th:replace="header :: header"></div>
+<div class="container mt-2">
+    <div class="row d-flex justify-content-center">
+        <h1>List Books</h1>
+    </div>
+    <div class="row">
+        <div class="col-8">
+            <a th:href="@{/create}" class="btn btn-primary btn-sm" th:if="${userName}=='admin'">Create</a>
+        </div>
+    </div>
+    <p th:if="${books.isEmpty()}" class="alert alert-danger d-flex justify-content-center mx-auto mt-4">List Empty</p>
+    <div th:unless="${books.isEmpty()}">
+<!--        <div class="row mt-2">-->
+            <table class="table table-strped table-bordered">
+                <p th:if="${msg}" class="alert alert-success" th:text="${msg}"></p>
+                <thead class="table" style="background: #5D6439">
+                <tr>
+                    <th style="color: white" class="text-center">Title</th>
+                    <th style="color: white" class="text-center">Author</th>
+                    <th style="color: white" class="text-center">Image</th>
+                    <th style="color: white" class="text-center" th:if="${userName}=='admin'">Action</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="book: ${books}">
+                    <td><a style="color: black" th:href="@{bookDetail(id=${book.id})}"><span th:text="${book.title}"></span></a></td>
+                    <td th:text="${book.author}"></td>
+                    <td width="200px"><img width="100px" height="100px" th:src="@{'uploads/'+${book.imagepath}}" alt=""></td>
+                    <td class="d-flex justify-content-center align-items-center" height="125px" th:if="${userName}=='admin'">
+                        <a th:href="@{book(id=${book.id})}" class="btn btn-success" style="margin-right: 10px">View</a>
+                        <a th:href="@{bookDelete(id=${book.id})}" class="btn btn-danger" onclick="return confirm('Delete?')">Delete</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+<!--        </div>-->
+    </div>
+    <div th:if="${mess}">
+        <p class="alert alert-success" th:text="${mess}"></p>
+    </div>
+    <div th:if="${msgError}">
+        <p class="alert alert-danger" th:text="${msgError}"></p>
+    </div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Cart</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+    <link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
+</head>
+<style>
+    .book-quantity {
+        margin: 0 10px;
+        font-size: 25px;
+    }
+    .book-quantity-wrapper {
+        display: flex;
+        align-items: center;
+    }
+    .book-quantity-btn {
+        height: 30px;
+        width: 30px;
+        background-color: gray;
+        display: grid;
+        place-items: center;
+        border-radius: 50%;
+        cursor: pointer;
+    }
+
+    .book-quantity-btn i {
+        font-size: 20px;
+        color: #fff;
+    }
+</style>
+<body style="background: #9BA17B">
+<div th:replace="header::header"></div>
+<div class="container">
+    <h1>Cart Item</h1>
+    <div th:if="${mess}">
+        <h3><p class="color: red;" th:text="${mess}"></p></h3>
+    </div>
+    <div th:if="${msg}">
+        <h3><p class="alert alert-success" th:text="${msg   }"></p></h3>
+    </div>
+    <table class="table table-strped table-bordered">
+        <thead class="table" style="background: #5D6439">
+            <tr>
+                <th style="color: white">Book</th>
+                <th style="color: white">Price</th>
+                <th style="color: white">Quantity</th>
+                <th style="color: white">Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="book: ${cartDto.books}">
+                <td><a style="color: black" th:href="@{bookDetail(id=${book.getKey().id})}" th:text="${book.getKey().title}"></a></td>
+                <td th:text="${book.getKey().price}"></td>
+                <td>
+                    <div class="book-quantity-wrapper">
+                    <span class="book-quantity-btn"><a th:href="@{/shop/add/__${book.getKey().getId()}__(action='add')}"><i class="bx bx-plus"></i></a></span>
+                    <span th:text="${book.value}" class="book-quantity"></span>
+                    <span class="book-quantity-btn"><a th:href="@{/shop/add/__${book.getKey().getId()}__(action='sub')}"><i class="bx bx-minus"></i></a></span>
+                    </div>
+                </td>
+                <td><a th:href="@{/cart/delete/{id}(id=${book.getKey().id})}" onclick="return confirm('Are you sure?')"><center><i class='bx bxs-trash'></i></center></a></td>
+            </tr>
+            <tr>
+                <td>Total: </td>
+                <td th:rows="2" th:text="${cartDto.toTalItem()}"></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <a th:href="@{/cart/cancel}" class="btn btn-primary float-right" onclick="return confirm('Bạn có chắc muốn hủy đơn?')" th:unless="${cartDto.books.isEmpty()}">Hủy Đơn</a>
+    <a th:href="@{/cart/checkout}" class="btn btn-primary float-right mr-2" onclick="return confirm('Xác nhận đơn hàng?')" th:unless="${cartDto.books.isEmpty()}">Đặt đơn</a>
+
+</div>
+</body>
+</html>

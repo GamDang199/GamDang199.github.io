@@ -1,0 +1,98 @@
+h1{
+    font-size: 1.7em;
+    font-weight: 600;
+}
+.book-row{
+    padding: 45px 0;
+}
+.book-info > * ~ * {
+    margin-top: 25px;
+}
+
+.book-info-detail-title {
+    font-weight: 600;
+    color: gray;
+}
+
+.book-img {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.book-img > img {
+    max-width: 70%;
+}
+.rating i {
+    color: #ffc107;
+}
+.book-info-price{
+    font-weight: 600;
+    font-size: 30px;
+    color: red;
+}
+
+.book-quantity-wrapper {
+    display: flex;
+    align-items: center;
+}
+
+.book-quantity {
+    margin: 0 10px;
+    font-size: 25px;
+}
+
+.book-quantity-btn {
+    height: 30px;
+    width: 30px;
+    background-color: gray;
+    display: grid;
+    place-items: center;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.book-quantity-btn i {
+    font-size: 20px;
+    color: #fff;
+}
+.box-header {
+    font-size: 20px;
+    font-weight: 600;
+    text-transform: capitalize;
+    margin-bottom: 20px;
+}
+.user-rate {
+    margin-bottom: 40px;
+}
+
+.user-info {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin-bottom: 20px;
+}
+.user-avt {
+    height: 50px;
+    width: 50px;
+    border-radius: 50%;
+    overflow: hidden;
+}
+.user-name {
+    margin-left: 20px;
+    display: flex;
+    align-items: stretch;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.name {
+    font-weight: 600;
+    text-transform: capitalize;
+    margin-bottom: 10px;
+}
+
+.user-rate-content {
+    line-height: 25px;
+}
+

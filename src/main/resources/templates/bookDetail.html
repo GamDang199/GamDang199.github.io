@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+<link href='https://unpkg.com/boxicons@2.0.7/css/boxicons.min.css' rel='stylesheet'>
+<link rel="stylesheet" href="./css/style.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.js"></script>
+<head>
+    <meta charset="UTF-8">
+    <title>Book</title>
+</head>
+<body style="background: #9BA17B">
+<div th:replace="header::header"></div>
+<!--<div class="container">-->
+<div class="container mt-2">
+    <div class = "row">
+        <div class ="col-lg-12 col-md-12 col-sm-12 container justify-content-center card" style="background: #D5DABE">
+            <div class="box">
+                <div class="row d-flex book-row">
+                    <div class="col-5">
+                        <div class="book-img" id="book-img">
+                            <img th:src="@{'uploads/'+${bookForm.imagepath}}" alt="">
+                        </div>
+                    </div>
+                    <div class="col-7">
+                        <div class="book-info">
+                            <h1 th:text="${bookForm.title}"></h1>
+                            <div class="book-info-detail">
+                                <span class="book-info-detail-title">Author:</span>
+                                <b th:text="${bookForm.author}"></b>
+                            </div>
+                            <div class="book-info-detail">
+                                <span class="book-info-detail-title">Rate</span>
+                                <span class="rating">
+                            <i class='bx bxs-star'></i>
+                            <i class='bx bxs-star'></i>
+                            <i class='bx bxs-star'></i>
+                            <i class='bx bxs-star'></i>
+                            <i class='bx bxs-star'></i>
+                    </span>
+                            </div>
+                            <div class="book-info-detail">
+                                <span class="book-info-detail-title">Description:</span>
+                                <p class="book-description" th:text="${bookForm.description}"></p>
+                            </div>
+                            <div class="book-info-detail">
+                                <span class="book-info-detail-title">Page:</span>
+                                <b th:text="${bookForm.pagenumber}"></b>
+                            </div>
+                            <div class="book-info-price" th:text="'$'+${bookForm.price}"></div>
+                            <form th:action="@{/shop/add/__${bookForm.id}__(action='addCart')}" method="post">
+                                <div class="book-quantity-wrapper">
+                                    <span class="book-quantity-btn" id="btn-sub"><i class="bx bx-minus"></i></span>
+                                    <input type="number" class="number" style="border: none; pointer-events: all;text-align: center" name="quantity" id="quantity" inputmode="numeric" step="1" min="1" max="1000" value="1" >
+                                    <span class="book-quantity-btn" id="btn-add"><i class="bx bx-plus"></i></span>
+                                </div>
+                                <button class="btn btn-primary mt-2">Add To Cart</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="box">
+                <div class="box-header">
+                    Review
+                </div>
+                <div th:each="r,status: ${reviews}">
+                    <div class="user-rate">
+                        <div class="user-info">
+                            <div class="user-avt">
+                                <img src="https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png" style="max-width: 100%" alt="">
+                            </div>
+                            <div class="user-name">
+                                <div class="name" th:text="${r.user?.username}"></div>
+                                <small th:text="${#dates.format(r.datepost,'dd-MM-yyyy')}" th:remove="tag"></small>
+                                <span>
+                                    <script th:inline="javascript">
+                                        $(function (){
+                                            var ratingId = "#rating"+[[${status.index}]]
+                                            var rating = [[${r.rating}]]
+                                            $(ratingId).rateYo({
+                                                rating: rating,
+                                                readOnly: true
+                                            })
+                                        })
+                                    </script>
+                                    <span th:id="rating+${status.index}"></span>
+                                    <div class="user-rate-content" th:text="${r.comment}">
+                                </span>
+                            </div>
+                        </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container mt-5">
+                <form th:action="@{/review/save}" method="post" th:object="${review}">
+                    <input type="hidden" name="idPost" th:value="${idPost}">
+                    <div class="form-group">
+                        <label>Rating: </label>
+                        <div id="rating"></div>
+                        <input type="hidden" name="rating" th:field="*{rating}">
+                    </div>
+                    <div class="form-group">
+                        <label>Comment: </label>
+                        <textarea th:field="*{comment}" cols="30" rows="5" class="form-control"></textarea>
+                    </div>
+                    <button class="btn btn-primary">Submit</button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>
+<div th:fragment="footer" class="mt-5"></div>
+</body>
+</html>
+<script>
+    $(function (){
+        $("#rating").rateYo({rating: 0}).on('rateyo.change',function (e,data){
+            var rating = data.rating;
+            $(this).parent().find('input[name=rating]').val(rating)
+        })
+    })
+    $(document).ready(function (){
+        $("#btn-add").on("click",add)
+        $("#btn-sub").on("click",sub)
+
+    })
+    function add(){
+        let quantity=$("#quantity")
+        qt=parseInt(quantity.val())
+        if(qt>0){
+            qt+=1
+            quantity.val(qt)
+        }
+    }
+    function sub(){
+        let quantity=$("#quantity")
+        qt=parseInt(quantity.val())
+        if(qt>1){
+            qt-=1
+            quantity.val(qt)
+        }
+    }
+</script>
